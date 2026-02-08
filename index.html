@@ -1,260 +1,210 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<title>Für dich ❤️</title>
+  <meta charset="UTF-8" />
+  <title>Für dich ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: white;
-  text-align: center;
-  padding-bottom: 90px;
-}
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
-/* ❤️ Herzen */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
-  animation: floatUp linear infinite;
-  opacity: 0.6;
-}
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 0.8; }
-  to { transform: translateY(-110vh); opacity: 0; }
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #ff7aa2, #ff9ec4);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      overflow: hidden;
+    }
 
-/* 📦 Card */
-.card {
-  margin: 80px auto 0;
-  background: rgba(255,255,255,0.15);
-  padding: 40px;
-  border-radius: 24px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  max-width: 440px;
-}
+    .card {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 25px;
+      width: 90%;
+      max-width: 700px;
+      margin-top: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
 
-h1 { font-size: 2.8rem; }
-p  { font-size: 1.1rem; }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
 
-/* 🔀 Tabs */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
+    .tabs button {
+      background: white;
+      color: #ff5f8f;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+    }
 
-.tab-btn {
-  padding: 10px 16px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  background: rgba(255,255,255,0.85);
-  color: #ff5e8a;
-  font-size: 0.95rem;
-}
+    .tab-content {
+      display: none;
+      text-align: center;
+    }
 
-.tab-btn.active {
-  background: white;
-  font-weight: bold;
-}
+    .tab-content.active {
+      display: block;
+    }
 
-.tab { display: none; }
-.tab.active { display: block; }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
 
-/* 🔐 Secret */
-input {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  width: 90%;
-  font-size: 1rem;
-  text-align: center;
-}
+    #map {
+      height: 400px;
+      width: 100%;
+      border-radius: 20px;
+      margin-top: 15px;
+    }
 
-.secret {
-  display: none;
-  margin-top: 20px;
-  font-size: 1.15rem;
-}
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+    }
 
-/* 📸 Galerie */
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 12px;
-}
+    .gallery img {
+      width: 100%;
+      border-radius: 18px;
+      object-fit: cover;
+    }
 
-.gallery img {
-  width: 100%;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.gallery img:hover {
-  transform: scale(1.05);
-}
+    input {
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+      width: 80%;
+    }
 
-/* 🖼️ Overlay */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-.overlay img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 20px;
-}
+    .music-bar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(255,255,255,0.9);
+      color: #ff5f8f;
+      text-align: center;
+      padding: 8px;
+      font-weight: 600;
+    }
 
-/* 🎶 Musik */
-.music-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255,255,255,0.9);
-  color: #ff5e8a;
-  padding: 14px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-</style>
+    .music-bar button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #ff5f8f;
+    }
+  </style>
 </head>
 
 <body>
 
-<script>
-function createHeart() {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.innerText = "❤️";
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.animationDuration = 6 + Math.random() * 6 + "s";
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 12000);
-}
-setInterval(createHeart, 600);
-</script>
+  <div class="card">
+    <div class="tabs">
+      <button onclick="showTab('start')">Start</button>
+      <button onclick="showTab('counter')">Love Counter</button>
+      <button onclick="showTab('gallery')">Galerie</button>
+      <button onclick="showTab('mapTab')">Unsere Reisen</button>
+      <button onclick="showTab('secret')">Geheimnis</button>
+    </div>
 
-<div class="card">
+    <div id="start" class="tab-content active">
+      <h1>Te amo ❤️</h1>
+      <p>Diese Seite ist nur für dich.</p>
+    </div>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="showTab('home', this)">Start</button>
-  <button class="tab-btn" onclick="showTab('counter', this)">Love Counter</button>
-  <button class="tab-btn" onclick="showTab('gallery', this)">Galerie</button>
-  <button class="tab-btn" onclick="showTab('secret', this)">Geheimnis</button>
-</div>
+    <div id="counter" class="tab-content">
+      <h2>💞 Wir seit</h2>
+      <p id="loveCounter"></p>
+    </div>
 
-<div id="home" class="tab active">
-  <h1>Te Amo ❤️</h1>
-  <p>Diese kleine Seite ist nur für dich.</p>
-</div>
+    <div id="gallery" class="tab-content">
+      <h2>📸 Unsere Momente</h2>
+      <div class="gallery">
+        <img src="images/1.jpg">
+        <img src="images/2.jpg">
+        <img src="images/3.jpg">
+        <img src="images/4.jpg">
+      </div>
+    </div>
 
-<div id="counter" class="tab">
-  <p id="since"></p>
-</div>
+    <div id="mapTab" class="tab-content">
+      <h2>🌍 Unsere Reisen</h2>
+      <div id="map"></div>
+    </div>
 
-<div id="gallery" class="tab">
-  <h1>📸</h1>
-  <div class="gallery">
-    <img src="images/1.jpg" onclick="openImg(this.src)">
-    <img src="images/2.jpg" onclick="openImg(this.src)">
-    <img src="images/3.jpg" onclick="openImg(this.src)">
-    <img src="images/4.jpg" onclick="openImg(this.src)">
+    <div id="secret" class="tab-content">
+      <h2>🔒 Geheimnis</h2>
+      <p>Passwort eingeben</p>
+      <input type="password" id="pw" placeholder="Passwort">
+      <p id="secretText"></p>
+    </div>
   </div>
-</div>
 
-<div id="secret" class="tab">
-  <p>💌 Gib das geheime Passwort ein</p>
-  <input id="passwordInput" placeholder="kleiner Hinweis…" />
-  <br><br>
-  <button class="tab-btn" onclick="checkPassword()">Nachricht öffnen 💖</button>
-  <div class="secret" id="secretMessage">
-    🥹💞<br>
-    Du bist mein Lieblingsmensch.
+  <div class="music-bar">
+    <button onclick="toggleMusic()">💖 Dein Lieblingslied 🎶 💖</button>
+    <audio id="music" src="music.mp3" loop></audio>
   </div>
-</div>
 
-</div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<div class="overlay" id="overlay" onclick="closeImg()">
-  <img id="overlayImg">
-</div>
+  <script>
+    function showTab(id) {
+      document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      if (id === "mapTab") setTimeout(() => map.invalidateSize(), 200);
+    }
 
-<div class="music-bar" onclick="toggleMusic()">
-  💖 Dein Lieblingslied 🎶 💖
-</div>
+    const startDate = new Date("2026-01-01T00:00:00");
+    setInterval(() => {
+      const now = new Date();
+      let diff = now - startDate;
+      const days = Math.floor(diff / (1000*60*60*24));
+      const hours = Math.floor(diff / (1000*60*60)) % 24;
+      const minutes = Math.floor(diff / (1000*60)) % 60;
+      document.getElementById("loveCounter").innerText =
+        `${days} Tage, ${hours} Stunden, ${minutes} Minuten`;
+    }, 1000);
 
-<audio id="music" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+    document.getElementById("pw").addEventListener("input", () => {
+      document.getElementById("secretText").innerText =
+        document.getElementById("pw").value === "1126"
+        ? "Du bist mein Lieblingsmensch ❤️"
+        : "";
+    });
 
-<script>
-function showTab(id, btn) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-}
+    const music = document.getElementById("music");
+    function toggleMusic() {
+      music.paused ? music.play() : music.pause();
+    }
 
-/* ⏳ Counter */
-const startDate = new Date("2026-01-01T00:00:00");
-function updateSince() {
-  const now = new Date();
-  let diff = Math.floor((now - startDate) / 1000);
-  const d = Math.floor(diff / 86400);
-  diff %= 86400;
-  const h = Math.floor(diff / 3600);
-  diff %= 3600;
-  const m = Math.floor(diff / 60);
-  const s = diff % 60;
-  document.getElementById("since").innerHTML =
-    `Zusammen seit<br><strong>${d}</strong> Tagen,
-     <strong>${h}</strong> Stunden,
-     <strong>${m}</strong> Minuten,
-     <strong>${s}</strong> Sekunden 💞`;
-}
-setInterval(updateSince, 1000);
-updateSince();
+    const map = L.map("map").setView([20, 0], 2);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
-/* 🎶 Musik */
-const music = document.getElementById("music");
-music.volume = 0.25;
-function toggleMusic() {
-  music.paused ? music.play() : music.pause();
-}
+    const places = [
+      { coords: [48.8566, 2.3522], text: "Paris 💙" },
+      { coords: [52.52, 13.405], text: "Berlin ✨" }
+    ];
 
-/* 🔐 Passwort */
-const correctPassword = "1126";
-function checkPassword() {
-  if (passwordInput.value === correctPassword) {
-    secretMessage.style.display = "block";
-  } else {
-    alert("Hmm… das ist noch nicht richtig 💭");
-  }
-}
-
-/* 🖼️ Galerie */
-function openImg(src) {
-  overlay.style.display = "flex";
-  overlayImg.src = src;
-}
-function closeImg() {
-  overlay.style.display = "none";
-}
-</script>
+    places.forEach(p =>
+      L.marker(p.coords).addTo(map).bindPopup(p.text)
+    );
+  </script>
 
 </body>
 </html>
