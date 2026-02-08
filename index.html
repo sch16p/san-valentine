@@ -8,56 +8,78 @@
     body {
       margin: 0;
       min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background: linear-gradient(135deg, #ff758c, #ff7eb3);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       color: white;
       text-align: center;
-      padding: 20px;
+      padding-bottom: 80px;
     }
 
+    /* ❤️ HERZEN */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 20px;
+      animation: floatUp linear infinite;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 0.8; }
+      to { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    /* 📦 CARD */
     .card {
       position: relative;
       z-index: 2;
-      background: rgba(255, 255, 255, 0.15);
-      padding: 40px 45px;
+      margin: 80px auto 0;
+      background: rgba(255,255,255,0.15);
+      padding: 40px;
       border-radius: 24px;
       backdrop-filter: blur(10px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       max-width: 420px;
-      width: 100%;
     }
 
-    h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
+    h1 { font-size: 3rem; margin-bottom: 10px; }
+    p  { font-size: 1.1rem; line-height: 1.6; }
 
-    p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-
-    .since {
+    /* 🔀 TABS */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
       margin-top: 20px;
-      font-size: 1.1rem;
-      line-height: 1.6;
+      flex-wrap: wrap;
     }
 
-    button {
-      margin-top: 18px;
-      padding: 12px 20px;
-      border: none;
+    .tab-btn {
+      padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.9);
-      color: #ff5e8a;
-      font-size: 1rem;
+      border: none;
       cursor: pointer;
+      background: rgba(255,255,255,0.85);
+      color: #ff5e8a;
+      font-size: 0.95rem;
     }
 
+    .tab-btn.active {
+      background: white;
+      font-weight: bold;
+    }
+
+    .tab {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .tab.active {
+      display: block;
+    }
+
+    /* 🔐 INPUT */
     input {
       margin-top: 12px;
       padding: 12px;
@@ -75,107 +97,120 @@
       line-height: 1.6;
     }
 
-    /* ❤️ SCHWEBENDE HERZEN */
-    .heart {
-      position: absolute;
-      bottom: -20px;
-      font-size: 20px;
-      animation: floatUp linear infinite;
-      opacity: 0.6;
+    /* 🎶 MUSIK BAR */
+    .music-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.9);
+      color: #ff5e8a;
+      padding: 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      z-index: 5;
     }
 
-    @keyframes floatUp {
-      from {
-        transform: translateY(0);
-        opacity: 0.8;
-      }
-      to {
-        transform: translateY(-110vh);
-        opacity: 0;
-      }
-    }
-
-    /* 📱 HANDY-OPTIMIERUNG */
+    /* 📱 MOBILE */
     @media (max-width: 600px) {
-      h1 {
-        font-size: 2.4rem;
-      }
-
-      p {
-        font-size: 1rem;
-      }
-
-      .since {
-        font-size: 1rem;
-      }
-
-      button {
-        font-size: 1.05rem;
-        padding: 14px 22px;
-      }
-
-      input {
-        font-size: 1.05rem;
-      }
-
-      .card {
-        padding: 30px 25px;
-      }
+      h1 { font-size: 2.4rem; }
+      .card { padding: 30px 25px; margin-top: 60px; }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- ❤️ HERZEN -->
+  <script>
+    function createHeart() {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.innerText = "❤️";
+      h.style.left = Math.random() * 100 + "vw";
+      h.style.animationDuration = 6 + Math.random() * 6 + "s";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 12000);
+    }
+    setInterval(createHeart, 600);
+  </script>
+
   <div class="card">
-    <h1>Te Amo ❤️</h1>
 
-    <p>
-      Jeden Tag mit dir fühlt sich besonders an.
-    </p>
+    <!-- 🔀 NAV -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('home', this)">Start</button>
+      <button class="tab-btn" onclick="showTab('counter', this)">Love Counter</button>
+      <button class="tab-btn" onclick="showTab('secret', this)">Geheimnis</button>
+    </div>
 
-    <div class="since" id="since"></div>
+    <!-- 🏠 HOME -->
+    <div id="home" class="tab active">
+      <h1>Te Amo ❤️</h1>
+      <p>Diese kleine Seite ist nur für dich.</p>
+    </div>
 
-    <button onclick="toggleMusic()">Unsere Musik abspielen 🎶</button>
+    <!-- ⏳ COUNTER -->
+    <div id="counter" class="tab">
+      <h1>⏳</h1>
+      <p id="since"></p>
+    </div>
 
-    <div style="margin-top:30px;">
+    <!-- 🔐 SECRET -->
+    <div id="secret" class="tab">
       <p>💌 Gib das geheime Passwort ein</p>
-      <input id="passwordInput" placeholder="kleiner Hinweis: etwas Besonderes…" />
-      <button onclick="checkPassword()">Nachricht öffnen 💖</button>
+      <input id="passwordInput" placeholder="kleiner Hinweis…" />
+      <br><br>
+      <button class="tab-btn" onclick="checkPassword()">Nachricht öffnen 💖</button>
+
+      <div class="secret" id="secretMessage">
+        🥹💞<br>
+        Du bist mein Lieblingsmensch.<br>
+        Mit dir fühlt sich alles richtig an.
+      </div>
     </div>
 
-    <div class="secret" id="secretMessage">
-      🥹💞<br>
-      Du bist mein Lieblingsmensch.<br>
-      Mit dir ist alles schöner.
-    </div>
-
-    <audio id="music" loop>
-      <source src="music.mp3" type="audio/mpeg">
-    </audio>
   </div>
 
+  <!-- 🎶 MUSIK -->
+  <div class="music-bar" onclick="toggleMusic()">
+    💖 Dein Lieblingslied 🎶 💖
+  </div>
+
+  <audio id="music" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
   <script>
-    /* ❤️ ZUSAMMEN-SEIT COUNTER */
-    const startDate = new Date("2023-07-12T00:00:00"); // ← Datum anpassen
+    /* 🔀 TABS */
+    function showTab(id, btn) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    }
+
+    /* ⏳ COUNTER */
+    const startDate = new Date("2023-07-12T00:00:00");
 
     function updateSince() {
       const now = new Date();
       let diff = Math.floor((now - startDate) / 1000);
 
-      const days = Math.floor(diff / (3600 * 24));
-      diff %= 3600 * 24;
-      const hours = Math.floor(diff / 3600);
+      const d = Math.floor(diff / 86400);
+      diff %= 86400;
+      const h = Math.floor(diff / 3600);
       diff %= 3600;
-      const minutes = Math.floor(diff / 60);
-      const seconds = diff % 60;
+      const m = Math.floor(diff / 60);
+      const s = diff % 60;
 
       document.getElementById("since").innerHTML =
         `Zusammen seit<br>
-         <strong>${days}</strong> Tagen,
-         <strong>${hours}</strong> Stunden,
-         <strong>${minutes}</strong> Minuten,
-         <strong>${seconds}</strong> Sekunden 💞`;
+         <strong>${d}</strong> Tagen,
+         <strong>${h}</strong> Stunden,
+         <strong>${m}</strong> Minuten,
+         <strong>${s}</strong> Sekunden 💞`;
     }
 
     setInterval(updateSince, 1000);
@@ -190,30 +225,15 @@
     }
 
     /* 🔐 PASSWORT */
-    const correctPassword = "love"; // ← HIER DEIN PASSWORT
+    const correctPassword = "love";
 
     function checkPassword() {
-      const input = document.getElementById("passwordInput").value;
-      if (input === correctPassword) {
+      if (document.getElementById("passwordInput").value === correctPassword) {
         document.getElementById("secretMessage").style.display = "block";
       } else {
         alert("Hmm… das ist noch nicht richtig 💭");
       }
     }
-
-    /* ❤️ HERZEN GENERIEREN */
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerText = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 6 + Math.random() * 6 + "s";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 12000);
-    }
-
-    setInterval(createHeart, 500);
   </script>
 
 </body>
