@@ -206,9 +206,7 @@
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
 
     const places = [
-      { coords: [49.797330555556, 9.9123194444444], text: "Friedrich-König-Gymnasium Würzburg 💙" },
-      { coords: [48.8566, 2.3522], text: "Paris 💙" },
-      { coords: [52.52, 13.405], text: "Berlin ✨" }
+      { coords: [49.797330555556, 9.9123194444444], text: "Schule + Erster Kuss"},
     ];
     places.forEach(p =>
       L.marker(p.coords).addTo(map).bindPopup(p.text)
