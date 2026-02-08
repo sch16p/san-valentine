@@ -17,7 +17,7 @@
       overflow: hidden;
     }
 
-    /* LOCK SCREEN */
+    /* 🔒 LOCK SCREEN */
     #lock {
       position: fixed;
       inset: 0;
@@ -27,6 +27,12 @@
       justify-content: center;
       z-index: 9999;
       text-align: center;
+      transition: opacity 0.6s ease;
+    }
+
+    #lock.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     #lock .box {
@@ -62,7 +68,7 @@
       color: #ffdede;
     }
 
-    /* HEARTS */
+    /* ❤️ HEARTS */
     .heart {
       position: fixed;
       bottom: -20px;
@@ -73,24 +79,20 @@
     }
 
     @keyframes floatUp {
-      0% {
-        transform: translateY(0) scale(0.8);
-        opacity: 0;
-      }
-      10% {
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-110vh) scale(1.3);
-        opacity: 0;
-      }
+      from { transform: translateY(0); opacity: 0; }
+      to { transform: translateY(-110vh); opacity: 0; }
     }
 
-    /* APP */
+    /* 🔓 APP */
     #app {
-      display: none;
       height: 100%;
       overflow-y: auto;
+      filter: blur(12px);
+      transition: filter 0.6s ease;
+    }
+
+    #app.unlocked {
+      filter: blur(0);
     }
 
     .card {
@@ -102,6 +104,17 @@
       backdrop-filter: blur(12px);
       border-radius: 24px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    /* 🔒 LOCK BUTTON */
+    .lock-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      opacity: 0.8;
     }
 
     .tabs {
@@ -183,6 +196,8 @@
 <!-- ❤️ APP -->
 <div id="app">
   <div class="card">
+    <div class="lock-btn" onclick="relock()">🔒</div>
+
     <div class="tabs">
       <button onclick="showTab('start')">Start</button>
       <button onclick="showTab('counter')">Love Counter</button>
@@ -192,7 +207,10 @@
 
     <div id="start" class="tab-content active">
       <h1>Te amo ❤️</h1>
-      <p>Diese Seite gehört nur uns.</p>
+      <p>
+        Ich hab diese kleine Seite nur für dich gemacht.<br>
+        Damit du jederzeit weißt, wie wichtig du mir bist 💌
+      </p>
     </div>
 
     <div id="counter" class="tab-content">
@@ -228,25 +246,29 @@
     const pin = document.getElementById("pin").value;
     if (pin === CORRECT_PIN) {
       spawnHearts();
-      setTimeout(() => {
-        document.getElementById("lock").style.display = "none";
-        document.getElementById("app").style.display = "block";
-        startCounter();
-      }, 800);
+      document.getElementById("lock").classList.add("hidden");
+      document.getElementById("app").classList.add("unlocked");
+      startCounter();
     } else {
       document.getElementById("error").innerText = "Falscher Code 💔";
     }
   }
 
+  function relock() {
+    document.getElementById("lock").classList.remove("hidden");
+    document.getElementById("app").classList.remove("unlocked");
+    document.getElementById("pin").value = "";
+    document.getElementById("error").innerText = "";
+  }
+
   function spawnHearts() {
-    for (let i = 0; i < 25; i++) {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerText = "❤️";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 3 + Math.random() * 2 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
+    for (let i = 0; i < 20; i++) {
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.innerText = "❤️";
+      h.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 4000);
     }
   }
 
