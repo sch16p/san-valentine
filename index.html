@@ -46,10 +46,10 @@
       padding: 12px;
       border-radius: 12px;
       border: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
       text-align: center;
       margin-top: 10px;
-      width: 150px;
+      width: 260px;
     }
 
     #lock button {
@@ -66,6 +66,7 @@
     #error {
       margin-top: 10px;
       color: #ffdede;
+      word-break: break-word;
     }
 
     /* ❤️ HEARTS */
@@ -107,7 +108,6 @@
       position: relative;
     }
 
-    /* 🔒 LOCK BUTTON */
     .lock-btn {
       position: absolute;
       top: 15px;
@@ -186,7 +186,7 @@
   <div class="box">
     <h2>🔒 Nur für dich</h2>
     <p>Gib den Code ein</p>
-    <input type="password" id="pin" placeholder="••••">
+    <input type="password" id="pin" placeholder="Geheimer Code">
     <br>
     <button onclick="unlock()">Öffnen 💖</button>
     <div id="error"></div>
@@ -207,10 +207,7 @@
 
     <div id="start" class="tab-content active">
       <h1>Te amo ❤️</h1>
-      <p>
-        Ich hab diese kleine Seite nur für dich gemacht.<br>
-        Damit du jederzeit weißt, wie wichtig du mir bist 💌
-      </p>
+      <p>Diese Seite ist nur für uns.</p>
     </div>
 
     <div id="counter" class="tab-content">
@@ -239,7 +236,9 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-  const CORRECT_PIN = "1126";
+  const CORRECT_PIN =
+"@JH#Vi,rTM#6qu>GqaZdBB],Abv.*Y#iUfp)fGB-@z+r*W-eyNeAtrJ^0sdBxi4MAG.1Vq3*sLgV_zbXVrm)BB~k)nJb0VkL3cW2";
+
   let mapLoaded = false;
 
   function unlock() {
